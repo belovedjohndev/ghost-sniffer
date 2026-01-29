@@ -8,7 +8,7 @@ import logging
 from datetime import datetime
 from typing import List, Dict, Optional
 import subprocess
-import platform
+import platform as system_platform
 
 TOOL_VERSION = "1.0.0"
 
@@ -30,7 +30,7 @@ except ImportError:
 
 
 def get_log_path():
-    if platform.system() == "Windows":
+    if system_platform.system() == "Windows":
         base_dir = os.getenv("LOCALAPPDATA") or os.path.expanduser("~")
         log_dir = os.path.join(base_dir, "GhostSniffer", "logs")
     else:
@@ -183,7 +183,7 @@ def get_network_interfaces():
             from scapy.all import get_if_list
             scapy_interfaces = get_if_list()
             if scapy_interfaces:
-                if platform.system() == "Windows":
+                if system_platform.system() == "Windows":
                     try:
                         result = subprocess.run(['ipconfig'], capture_output=True, text=True, timeout=5)
                         ipconfig_output = result.stdout
@@ -249,7 +249,7 @@ def get_network_interfaces():
             pass
     
     if not interfaces:
-        if platform.system() == "Windows":
+        if system_platform.system() == "Windows":
             try:
                 result = subprocess.run(['ipconfig'], capture_output=True, text=True, timeout=5)
                 lines = result.stdout.split('\n')
@@ -283,7 +283,7 @@ def get_network_interfaces():
     
     if not interfaces:
         logger.warning("No network interfaces detected; using fallback defaults.")
-        interfaces = ['lo', 'localhost'] if platform.system() != "Windows" else ['Local Area Connection']
+        interfaces = ['lo', 'localhost'] if system_platform.system() != "Windows" else ['Local Area Connection']
     
     return interfaces
 
@@ -339,7 +339,7 @@ class Phase1GhostSniffer:
             if '(' in interface and ')' in interface:
                 interface = interface.split('(')[-1].rstrip(')')
             
-            if platform.system() != "Windows":
+            if system_platform.system() != "Windows":
                 try:
                     subprocess.run(['iwconfig', interface, 'mode', 'monitor'], 
                                  capture_output=True, timeout=2, check=False)
@@ -1439,7 +1439,7 @@ class GhostSnifferGUI:
         info_msg = f"""Ghost-Sniffer Initialized
 
 Operating Mode: DEMONSTRATION MODE
-Platform: {platform.system()}
+Platform: {system_platform.system()}
 
 IMPORTANT: This is a demonstration/educational tool.
    • Phase 1: Real network discovery (enabled)
@@ -1534,7 +1534,7 @@ The tool is ready to begin the four-phase ritual."""
         )
         self.stop_btn.pack(side=tk.LEFT, padx=5)
         
-        if platform.system() == "Windows":
+        if system_platform.system() == "Windows":
             import_btn = tk.Button(
                 control_frame,
                 text="Import from Windows",
@@ -1847,7 +1847,7 @@ The tool is ready to begin the four-phase ritual."""
         self.phase1_log.insert(tk.END, f"[*] Total catch: {len(self.captured_networks)} digital whispers\n")
     
     def import_windows_networks(self):
-        if platform.system() != "Windows":
+        if system_platform.system() != "Windows":
             self._show_info("Windows Only", "This feature is only available on Windows.")
             return
         
