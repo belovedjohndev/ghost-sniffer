@@ -11,8 +11,10 @@ requires-python = ">=3.7"
 license = { text = "Educational and authorized security testing only" }
 dependencies = [
     "scapy==2.5.0",
-    "reportlab==3.6.0",
 ]
+
+[project.optional-dependencies]
+pdf = ["reportlab==3.6.0"]
 
 [project.scripts]
 ghost-sniffer = "ghost_sniffer:main"

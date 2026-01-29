@@ -13,6 +13,10 @@ if errorlevel 1 (
 echo [*] Installing build dependencies...
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
+if exist requirements-export.txt (
+    echo [*] Installing optional PDF export dependencies...
+    pip install -r requirements-export.txt
+)
 
 echo [*] Building executable...
 for /f "usebackq delims=" %%v in (`powershell -NoProfile -Command "(Select-String -Path 'ghost_sniffer.py' -Pattern 'TOOL_VERSION\s*=\s*\"(.*)\"').Matches.Groups[1].Value"`) do set GS_VERSION=%%v

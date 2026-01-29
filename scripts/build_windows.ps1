@@ -16,6 +16,10 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "[*] Installing build dependencies..." -ForegroundColor Green
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
+if (Test-Path "requirements-export.txt") {
+    Write-Host "[*] Installing optional PDF export dependencies..." -ForegroundColor Green
+    pip install -r requirements-export.txt
+}
 
 Write-Host "[*] Building executable..." -ForegroundColor Green
 $version = (Select-String -Path "ghost_sniffer.py" -Pattern 'TOOL_VERSION\s*=\s*"(.*)"').Matches.Groups[1].Value

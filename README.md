@@ -77,6 +77,10 @@ A comprehensive four-phase wireless network security auditing tool that combines
    ```bash
    pip install -e .
    ```
+   For PDF export support:
+   ```bash
+   pip install -r requirements-export.txt
+   ```
 
 3. **Install Npcap (Windows only):**
    - Download from https://npcap.com/
@@ -166,6 +170,8 @@ scripts\build_windows.bat
 ```
 
 The executable will be written to `dist\Ghost-Sniffer-<version>.exe`.
+
+Note: For PDF export support in the EXE, install `requirements-export.txt` before building.
 
 ## Project Structure
 
