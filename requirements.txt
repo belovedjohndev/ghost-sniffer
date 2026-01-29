@@ -1,0 +1,14 @@
+# Core dependencies (pinned for reproducible installs)
+scapy==2.5.0
+
+# Optional dependencies
+# netifaces>=0.11.0  # Optional - requires C++ build tools on Windows. Tool works without it in demo mode.
+
+# Export formats
+reportlab==3.6.0  # For PDF export
+
+# External tools (not Python packages - must be installed separately)
+# aircrack-ng - For WEP/WPA cracking (Linux: apt-get install aircrack-ng, Windows: download from aircrack-ng.org)
+# reaver - For WPS PIN attacks (Linux: apt-get install reaver)
+# hashcat - For password cracking (Download from hashcat.net)
+# hcxdumptool/hcxtools - For PMKID attacks (Linux: apt-get install hcxdumptool hcxtools)

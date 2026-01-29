@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ghost-sniffer"
+version = "1.0.0"
+description = "Wireless security auditing tool for authorized use"
+readme = "README.md"
+requires-python = ">=3.7"
+license = { text = "Educational and authorized security testing only" }
+dependencies = [
+    "scapy==2.5.0",
+    "reportlab==3.6.0",
+]
+
+[project.scripts]
+ghost-sniffer = "ghost_sniffer:main"
+
+[tool.setuptools]
+py-modules = ["ghost_sniffer", "real_exploits"]

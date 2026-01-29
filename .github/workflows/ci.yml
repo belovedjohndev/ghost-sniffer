@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y python3-tk
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: python -m unittest discover -s tests
+
+      - name: Set build version
+        shell: pwsh
+        run: |
+          $version = (Select-String -Path "ghost_sniffer.py" -Pattern 'TOOL_VERSION\s*=\s*"(.*)"').Matches.Groups[1].Value
+          if (-not $version) { throw "TOOL_VERSION not found" }
+          "GS_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Build Windows executable
+        run: scripts\build_windows.bat
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ghost-Sniffer-windows-${{ env.GS_VERSION }}
+          path: dist/Ghost-Sniffer-*.exe
+
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: python -m unittest discover -s tests
