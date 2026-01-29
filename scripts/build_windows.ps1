@@ -25,7 +25,7 @@ if ((Test-Path "requirements-export.txt") -and ($env:SKIP_PDF_EXPORT -ne "1")) {
 }
 
 Write-Host "[*] Building executable..." -ForegroundColor Green
-$version = python -c "import re; import sys; data=open('ghost_sniffer.py','r',encoding='utf-8').read(); m=re.search(r'TOOL_VERSION\\s*=\\s*\\\"([^\\\"]+)\\\"', data); print(m.group(1) if m else '')"
+$version = python scripts/get_version.py
 if (-not $version) {
     Write-Host "[ERROR] Unable to determine TOOL_VERSION from ghost_sniffer.py" -ForegroundColor Red
     exit 1
