@@ -15,14 +15,17 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host "[*] Installing build dependencies..." -ForegroundColor Green
 pip install -r requirements.txt
+if ($LASTEXITCODE -ne 0) { exit 1 }
 pip install -r requirements-dev.txt
-if (Test-Path "requirements-export.txt") {
+if ($LASTEXITCODE -ne 0) { exit 1 }
+if ((Test-Path "requirements-export.txt") -and ($env:SKIP_PDF_EXPORT -ne "1")) {
     Write-Host "[*] Installing optional PDF export dependencies..." -ForegroundColor Green
     pip install -r requirements-export.txt
+    if ($LASTEXITCODE -ne 0) { exit 1 }
 }
 
 Write-Host "[*] Building executable..." -ForegroundColor Green
-$version = (Select-String -Path "ghost_sniffer.py" -Pattern 'TOOL_VERSION\s*=\s*"(.*)"').Matches.Groups[1].Value
+$version = python -c "import re; import sys; data=open('ghost_sniffer.py','r',encoding='utf-8').read(); m=re.search(r'TOOL_VERSION\\s*=\\s*\\\"([^\\\"]+)\\\"', data); print(m.group(1) if m else '')"
 if (-not $version) {
     Write-Host "[ERROR] Unable to determine TOOL_VERSION from ghost_sniffer.py" -ForegroundColor Red
     exit 1
